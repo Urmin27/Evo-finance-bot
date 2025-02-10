@@ -1,123 +1,161 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SUPPORT EVO‑FINANCE</title>
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Roboto', sans-serif;
-      background: linear-gradient(to right, #1e3c72, #2a5298);
-      color: #333;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #fff;
-      margin-bottom: 20px;
-      font-size: 2.5em;
-      text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
-    }
-    .support-container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 10px;
-      padding: 30px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-    .support-container h2 {
-      text-align: center;
-      color: #1e3c72;
-      margin-bottom: 30px;
-      font-size: 2em;
-      font-weight: 700;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-    form label {
-      font-weight: 600;
-    }
-    form input {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 1em;
-      width: 100%;
-    }
-    .send-btn {
-      background: #ffcc00;
-      color: #000;
-      padding: 10px;
-      border: none;
-      border-radius: 25px;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: transform 0.3s;
-    }
-    .send-btn:hover {
-      transform: scale(1.05);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evo Finance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .response-box {
+            background: #ecf0f1;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .response-box a {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .response-box a:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-  <h1>SUPPORT EVO‑FINANCE</h1>
-  <div class="support-container">
-    <h2>DEMANDE DE RETRAIT</h2>
-    <form id="supportForm">
-      <label for="nom">Nom et prénom :</label>
-      <input type="text" id="nom" required>
-      
-      <label for="facebook">Nom sur Facebook ou Lien Facebook :</label>
-      <input type="text" id="facebook" required>
-      
-      <label for="telephone">Numéro de Téléphone :</label>
-      <input type="text" id="telephone" required>
-      
-      <label for="dateTransaction">Date :</label>
-      <input type="date" id="dateTransaction" required>
-      
-      <label for="montant">Montant :</label>
-      <input type="number" id="montant" required>
-      
-      <button type="submit" class="send-btn">ENVOYER</button>
-    </form>
-  </div>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById("supportForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        
-        let nom = document.getElementById("nom").value;
-        let facebook = document.getElementById("facebook").value;
-        let telephone = document.getElementById("telephone").value;
-        let dateTransaction = document.getElementById("dateTransaction").value;
-        let montant = document.getElementById("montant").value;
-        
-        let subject = encodeURIComponent("Demande du retrait");
-        let body = encodeURIComponent(
-          "Nom et prénom : " + nom + "\n" +
-          "Nom sur Facebook ou Lien : " + facebook + "\n" +
-          "Numéro de Téléphone : " + telephone + "\n" +
-          "Date de Transaction : " + dateTransaction + "\n" +
-          "Montant : " + montant + " $"
-        );
-        
-        window.location.href = "mailto:evofinances2@gmail.com?subject=" + subject + "&body=" + body;
-        
-        document.getElementById("supportForm").reset();
-      });
-    });
-  </script>
+
+    <div class="container">
+        <h2>Evo Finance</h2>
+        <input type="text" id="question" placeholder="Posez votre question ici...">
+        <button id="askBtn">Rechercher</button>
+        <div id="response"></div>
+    </div>
+
+    <script src="bot.js"></script>
+
 </body>
+  <script >async function askBot(question) {
+    const sources = {
+        "Retrait": "https://evo-finance-condition-retrait.vercel.app/",
+        "Dépôt": "https://evo-finance-condition-de-d-p-t.vercel.app/",
+        "Parrainage": "https://evo-finance-quipe-ivl7.vercel.app/",
+        "Profil": "https://evo-finance-seven.vercel.app/"
+    };
+
+    question = question.toLowerCase().trim();
+
+    // Réponse spéciale pour "Bonjours"
+    if (question === "bonjours" || question === "bonjour") {
+        document.getElementById("response").innerHTML = `
+            <div class="response-box">
+                <p>Bonjours ! Comment puis-je vous aider ?</p>
+            </div>
+        `;
+        return;
+    }
+
+    let found = false;
+
+    for (const [title, url] of Object.entries(sources)) {
+        if (question.includes(title.toLowerCase())) {
+            found = true;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Impossible d’accéder à la page.");
+
+                document.getElementById("response").innerHTML = `
+                    <div class="response-box">
+                        <p>La réponse à votre question se trouve ici :</p>
+                        <a href="${url}" target="_blank">${url}</a>
+                    </div>
+                `;
+                return;
+            } catch (error) {
+                document.getElementById("response").innerHTML = `
+                    <div class="response-box error">
+                        <p>Une erreur est survenue en accédant à la page.</p>
+                    </div>
+                `;
+                return;
+            }
+        }
+    }
+
+    // Si la réponse n'est pas trouvée, afficher le formulaire
+    if (!found) {
+        document.getElementById("response").innerHTML = `
+            <div class="response-box">
+                <p>Aucune réponse trouvée. Vous pouvez nous contacter.</p>
+                <input type="email" id="email" placeholder="Votre email">
+                <textarea id="message" placeholder="Votre message"></textarea>
+                <button onclick="sendEmail()">Envoyer</button>
+            </div>
+        `;
+    }
+}
+
+// Envoi du message par email
+function sendEmail() {
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+
+    if (email.trim() === "" || message.trim() === "") {
+        alert("Veuillez remplir tous les champs.");
+        return;
+    }
+
+    const mailtoLink = `mailto:evofinances2@gmail.com?subject=Question Client&body=Email: ${email}%0D%0A%0D%0AMessage: ${message}`;
+    window.location.href = mailtoLink;
+}
+
+// Écouteur d'événement pour le bouton de recherche
+document.getElementById("askBtn").addEventListener("click", async () => {
+    const question = document.getElementById("question").value.trim();
+    if (question === "") {
+        alert("Veuillez entrer une question.");
+        return;
+    }
+    await askBot(question);
+});
+</script>
 </html>
