@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evo Finance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .response-box {
+            background: #ecf0f1;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .response-box a {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .response-box a:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Evo Finance</h2>
+        <input type="text" id="question" placeholder="Posez votre question ici...">
+        <button id="askBtn">Rechercher</button>
+        <div id="response"></div>
+    </div>
+
+    <script src="bot.js"></script>
+
+</body>
+<script >
+async function askBot(question) {
+    const sources = {
+        "Retrait": "https://evo-finance-condition-retrait.vercel.app/",
+        "Dépôt": "https://evo-finance-condition-de-d-p-t.vercel.app/",
+        "Parrainage": "https://evo-finance-quipe-ivl7.vercel.app/",
+        "information": "https://evo-finance-seven.vercel.app/"
+    };
+
+    question = question.toLowerCase().trim();
+
+    // Réponse spéciale pour "Bonjours"
+    if (question === "bonjours" || question === "bonjour") {
+        document.getElementById("response").innerHTML = `
+            <div class="response-box">
+                <p>Bonjours ! Comment puis-je vous aider ?</p>
+            </div>
+        `;
+        return;
+    }
+
+    let found = false;
+
+    for (const [title, url] of Object.entries(sources)) {
+        if (question.includes(title.toLowerCase())) {
+            found = true;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Impossible d’accéder à la page.");
+
+                document.getElementById("response").innerHTML = `
+                    <div class="response-box">
+                        <p>La réponse à votre question se trouve ici :</p>
+                        <a href="${url}" target="_blank">${url}</a>
+                    </div>
+                `;
+                return;
+            } catch (error) {
+                document.getElementById("response").innerHTML = `
+                    <div class="response-box error">
+                        <p>Une erreur est survenue en accédant à la page.</p>
+                    </div>
+                `;
+                return;
+            }
+        }
+    }
+
+    // Si la réponse n'est pas trouvée, afficher le formulaire
+    if (!found) {
+        document.getElementById("response").innerHTML = `
+            <div class="response-box">
+                <p>Aucune réponse trouvée. Vous pouvez nous contacter.</p>
+                <input type="email" id="email" placeholder="Votre email">
+                <textarea id="message" placeholder="Votre message"></textarea>
+                <button onclick="sendEmail()">Envoyer</button>
+            </div>
+        `;
+    }
+}
+
+// Envoi du message par email
+function sendEmail() {
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+
+    if (email.trim() === "" || message.trim() === "") {
+        alert("Veuillez remplir tous les champs.");
+        return;
+    }
+
+    const mailtoLink = `mailto:horlandobe@gmail.com?subject=Question Client&body=Email: ${email}%0D%0A%0D%0AMessage: ${message}`;
+    window.location.href = mailtoLink;
+}
+
+// Écouteur d'événement pour le bouton de recherche
+document.getElementById("askBtn").addEventListener("click", async () => {
+    const question = document.getElementById("question").value.trim();
+    if (question === "") {
+        alert("Veuillez entrer une question.");
+        return;
+    }
+    await askBot(question);
+});
+
+ </script>
+</html>
